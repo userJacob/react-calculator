@@ -126,12 +126,13 @@ class Calculator extends React.Component {
     }
     if (this.state.display != "I CAN'T TAKE THIS") {
       if (!(/\./g).test(this.state.display)) {
+        var displayHasNumber = /[0-9]/.test(this.state.display);
         this.setState({
           preVal: this.state.display,
-          display: /[0-9]/.test(this.state.display)
-                   ? this.state.display + e.target.value
+          display: displayHasNumber ? this.state.display + e.target.value
                    : '0' + e.target.value,
-          history: this.state.history + e.target.value
+          history: displayHasNumber ? this.state.history + e.target.value
+                   : this.state.history + '0' + e.target.value
         });
       } else {
         this.setState({
@@ -162,7 +163,7 @@ class Calculator extends React.Component {
       let hasOperator = /[x+-/]/.test(endOfHistory);
       let endsWithOperator = /[x+-/]$/.test(endOfHistory);
       this.setState({
-        display: this.state.history.length === 1 ? '0'
+        display: this.state.history.length <= 1 ? '0'
                : /[0-9]+\.$/.test(endOfHistory) ? endOfHistory.match(/[0-9]+\.$/)
                : this.state.display.length === 1
                   && this.state.history.length > 1
